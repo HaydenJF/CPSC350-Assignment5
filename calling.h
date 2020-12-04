@@ -6,8 +6,8 @@
 
 class calling{
   public:
-    calling();
-    ~calling();
+    calling(); //default constructor
+    ~calling(); //destructor
     void getFiles();
     void askWhat();
 
@@ -33,8 +33,8 @@ class calling{
   private:
     string studentFile = "studentTable";
     string teacherFile = "facultyTable";
-    TBST<student> *studentTree;
-    TBST<teacher> *teacherTree;
+    TBST<student> *studentTree; //tree for student
+    TBST<teacher> *teacherTree; //tree for faculty
     GenStack<stackNode<Person>> *stack;
 
     int numS = 0;
