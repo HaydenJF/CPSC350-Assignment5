@@ -6,17 +6,17 @@ class TBST{
     TTreeNode<type> *root;
     int size;
   public:
-    TBST();
+    TBST(); //default constructor
     ~TBST();
 
-    type getNode(type i);
+    type getNode(type i); // find the element value in the BST
     TTreeNode<type>* getTreeNode(type i);
     bool searchNode(type value); //our key is the value in this example
-    void insertNode(type value);
-    bool deleteNode(type value);
-    bool isEmpty();
+    void insertNode(type value); //value is the key
+    bool deleteNode(type value); //delete the node at position value
+    bool isEmpty(); 
     unsigned int getSize();
-    type getMin();
+    type getMin(); 
     type getMax();
     void recPrint(TTreeNode<type> *node);
     void printEntireTree();
@@ -25,6 +25,7 @@ class TBST{
 };
 
 template <class type>
+//default constructor
 TBST<type>::TBST(){
   root = NULL;
   size = 0;
@@ -33,6 +34,7 @@ TBST<type>::TBST(){
 template <class type>
 TBST<type>::~TBST(){
   delete root;
+  //iterate and delete
 }
 
 template <class type>
@@ -117,20 +119,23 @@ type TBST<type>::getMin(){
 
 template <class type>
 void TBST<type>::insertNode(type value){
-  TTreeNode<type> *node = new TTreeNode<type>(value);
-  if(isEmpty()){
+  TTreeNode<type> *node = new TTreeNode<type>(value); //key is now set to value
+  //check if value exist, if not continue
+  if(isEmpty()){ //empty tree
     root = node;
-  } else{
-    TTreeNode<type> *parent = NULL;
+  } else{ //not an empty tree, now we need to find insertion point
+    TTreeNode<type> *parent = NULL; //empty node
     TTreeNode<type> *curr = root;
     while(true){
       parent = curr;
+      //error checking
       if (value < curr->key){
-        curr = curr->left;
-        if (curr == NULL){
+        curr = curr->left; //going left
+        if (curr == NULL){ //new home found for new node
           parent->left = node;
           break;
         }
+        //else keep looping
       } else {
         curr = curr->right;
         if (curr == NULL){
@@ -148,10 +153,10 @@ bool TBST<type>::searchNode(type value){
 
   if(isEmpty()){
     return false;
-  } else {
+  } else { //not an empty tree
     TTreeNode<type> *curr = root;
     while (curr->key != value){
-      if (value < curr->key){
+      if (value < curr->key){ //go left
         curr = curr->left;
       } else {
         curr = curr->right;
@@ -172,12 +177,13 @@ bool TBST<type>::deleteNode(type value){
   TTreeNode<type> *part = NULL;
   TTreeNode<type> *curr = root;
   bool isLeft = true;
+  //finding the node we want to delete
   while (curr->key != value){
     part = curr;
-    if (value < curr->key){
+    if (value < curr->key){ //left child
       curr = curr->left;
       isLeft = true;
-    } else {
+    } else { //right child
       curr = curr->right;
       isLeft = false;
     }
@@ -185,37 +191,38 @@ bool TBST<type>::deleteNode(type value){
       return false;
     }
   }
+  //node point has been found
 
   size--;
   //leaf node deleted
   if (curr->left == NULL && curr->right == NULL){
-    if (curr == root){
+    if (curr == root){ //tree has the root as it's only element
       root = NULL;
-    } else if (isLeft) {
+    } else if (isLeft) { //the child is a left child
       part->left = NULL;
-    } else {
+    } else { //the child is a right child
       part->right = NULL;
     }
   }
   //case: deleted node has 1 child
-  else if (curr->right == NULL){ //is left child
+  else if (curr->right == NULL){ //is left child and the node we need to delete has no right child
     if (curr == root){
       root = curr->left;
-    } else if (isLeft) {
+    } else if (isLeft) { //the deleting node is a left child
       part->left = curr->left;
-    } else {
+    } else { //the deleting node is a right child of the partner
       part->right = curr->left;
     }
-  } else if (curr->left == NULL){ //is right child
+  } else if (curr->left == NULL){ //is right child and the node we need to delete has no left child
     if (curr == root){
       root = curr->right;
-    } else if (isLeft) {
+    } else if (isLeft) { //node we need to delete is a left child of a parent node
       part->left = curr->right;
-    } else {
+    } else { //node we need to deelte is a right child of a parent node
       part->right = curr->right;
     }
   } else { //the dreaded double children
-    TTreeNode<type> *successor = getSuccessor(curr);
+    TTreeNode<type> *successor = getSuccessor(curr); //finding the successor of the deleting node which is current
 
     if (curr == root){
       root = successor;
@@ -234,10 +241,10 @@ bool TBST<type>::deleteNode(type value){
 }
 
 template <class type>
-TTreeNode<type>* TBST<type>::getSuccessor(TTreeNode<type> *d){ //represents the deleted node
+TTreeNode<type>* TBST<type>::getSuccessor(TTreeNode<type> *d){ //d represents the deleted node
   TTreeNode<type> *curr = d->right;
   TTreeNode<type> *succ = d;
-  TTreeNode<type> *sp = d;
+  TTreeNode<type> *sp = d; //successors parent
 
   while (curr != NULL){
     sp = succ;
