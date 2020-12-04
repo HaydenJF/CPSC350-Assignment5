@@ -13,7 +13,7 @@ calling::calling(){
   getFiles();
 }
 
-calling::~calling(){
+calling::~calling(){ //default constructor
   ofstream fileS;
   fileS.open (studentFile);
   if (fileS.is_open()) {
@@ -244,17 +244,17 @@ void calling::askWhat(){
 
 }
 
-void calling::Q1(){
+void calling::Q1(){ //prints out all students
   studentTree->printEntireTree();
   askWhat();
 }
 
-void calling::Q2(){
-  teacherTree->printEntireTree();
+void calling::Q2(){ //prints out all faculty
+  teacherTree->printEntireTree(); 
   askWhat();
 }
 
-void calling::Q3(){
+void calling::Q3(){ //method displays student information when given ID
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -263,7 +263,7 @@ void calling::Q3(){
   askWhat();
 }
 
-void calling::Q4(){
+void calling::Q4(){ //method displays faculty information when given ID
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -272,7 +272,7 @@ void calling::Q4(){
   askWhat();
 }
 
-void calling::Q5(){
+void calling::Q5(){ //method displays advisor information when given student ID
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -282,7 +282,7 @@ void calling::Q5(){
   askWhat();
 }
 
-void calling::Q6(){
+void calling::Q6(){ //method displays advisor information given faculty ID
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -300,7 +300,7 @@ void calling::Q6(){
   askWhat();
 }
 
-void calling::Q7(){
+void calling::Q7(){ //method adds new student by asking for ID, name, year, major, GPA, and advisor, then adds to the Student tree
   string i, n, y, m, g, t;
   cout << "ID: ";
   cin >> i;
@@ -328,7 +328,7 @@ void calling::Q7(){
   askWhat();
 }
 
-void calling::Q8(){
+void calling::Q8(){ //method deletes student when given ID
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -340,7 +340,7 @@ void calling::Q8(){
   askWhat();
 }
 
-void calling::Q9(){
+void calling::Q9(){ //method adds new student by asking for ID, name, level, department, all student IDS, then adds to the faculty tree
   string i, n, l, d, s;
   cout << "ID: ";
   cin >> i;
@@ -377,7 +377,7 @@ void calling::Q9(){
   askWhat();
 }
 
-void calling::Q10(){
+void calling::Q10(){ //method deletes faculty member when given ID
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -389,7 +389,7 @@ void calling::Q10(){
   askWhat();
 }
 
-void calling::Q11(){
+void calling::Q11(){ //method changes a student’s advisor given the student id and the new faculty id.
   cout << "What is ID?" << endl;
   string c1;
   cin >> c1;
@@ -406,7 +406,7 @@ void calling::Q11(){
   askWhat();
 }
 
-void calling::Q12(){
+void calling::Q12(){ //method removes an advisee from a faculty member given the ids
   cout << "What is ID?" << endl;
   string c1;
   cin >> c1;
@@ -424,7 +424,7 @@ void calling::Q12(){
   askWhat();
 }
 
-void calling::Q13(){
+void calling::Q13(){ // method performs the rollback
   stackNode<Person> node = stack->peek();
   /*if (node.endisHere()){
     cout << "You have no Rollbacks left." << endl;
@@ -447,6 +447,6 @@ void calling::Q13(){
   askWhat();
 }
 
-void calling::Q14(){
+void calling::Q14(){ //exit
 
 }
