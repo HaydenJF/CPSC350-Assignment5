@@ -5,8 +5,8 @@ using namespace std;
 template <class type>
 class TTreeNode{
 public:
-  TTreeNode();
-  TTreeNode(type key);
+  TTreeNode(); //deafult constructor
+  TTreeNode(type key); //overloaded constructor
   ~TTreeNode();
 
   type key;
