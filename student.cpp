@@ -27,7 +27,7 @@ student::student(int i, string n, string l, string m, double g, int a){
   advisor = a;
 }
 
-student::~student(){}
+student::~student(){} //no need for a destructor, since there is no dynamically allocated memory
 
 string student::look(){
   string s = "";
@@ -68,7 +68,7 @@ bool student::operator<(student s){
   }
 }
 
-ostream& operator<<(ostream& o, const student& s){
+ostream& operator<<(ostream& o, const student& s){ //output stream to write the infromation out 
   o << "ID: " << s.id << endl
     << "Name: " << s.name << endl
     << "Year: " << s.level << endl
