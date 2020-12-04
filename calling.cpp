@@ -8,12 +8,12 @@
 #include <typeinfo>
 
 using namespace std;
-
+//constructor
 calling::calling(){
   getFiles();
 }
-
-calling::~calling(){ //default constructor
+//destructor (also adds to file)
+calling::~calling(){
   ofstream fileS;
   fileS.open (studentFile);
   if (fileS.is_open()) {
@@ -45,12 +45,17 @@ calling::~calling(){ //default constructor
   fileT.close();
 
 }
-
+//gets the trees ready and info from file
 void calling::getFiles(){
+  studentTree = new TBST<student>();
   string tempLine;
   ifstream fileS(studentFile);
-
-  if (fileS.is_open()) {
+  if (!fileS.good()){
+    ofstream o (studentFile);
+    o << "";
+    o.close();
+  } else if (fileS.peek() == ifstream::traits_type::eof()){
+  } else if (fileS.is_open()) {
     sArray = new student[128];
     while (getline(fileS, tempLine)) {
 
@@ -65,7 +70,6 @@ void calling::getFiles(){
       }
       //(id)[name]<grade>{major}!gpa@#advisor$
       //(145)[Nick Man]<Sophmore>{Communications}!4.3@#423$
-      //cout << output << endl;
         string i = output.substr(output.find("(")+1, output.find(")")-1);
         int id = atoi(i.c_str());
         int n1 = output.find("[")+1;
@@ -86,12 +90,17 @@ void calling::getFiles(){
         sArray[numS] = student(id, name, grade, major, gpa, advisor);
         numS++;
     }
-    studentTree = new TBST<student>();
     createTreeS(-1, ((-1+numS)/2), numS);
   }
+  teacherTree = new TBST<teacher>();
   string tempLine2;
   ifstream fileT(teacherFile);
-  if (fileT.is_open()) {
+  if (!fileT.good()){
+    ofstream o (teacherFile);
+    o << "";
+    o.close();
+  } else if (fileT.peek() == ifstream::traits_type::eof()){
+  } else if (fileT.is_open()) {
     tArray = new teacher[128];
     while (getline(fileT, tempLine2)) {
       stringstream sstream(tempLine2);
@@ -105,7 +114,6 @@ void calling::getFiles(){
       }
       //(id)[name]<level>{department}:num,:num,:num,
       //(145)[Nick Man]<Something>{Communications}:111,:121,:143,
-      //cout << output << endl;
         string i = output.substr(output.find("(")+1, output.find(")")-1);
         int id = atoi(i.c_str());
         int n1 = output.find("[")+1;
@@ -136,16 +144,18 @@ void calling::getFiles(){
         tArray[numT] = teacher(id, name, level, department, arrayT, tot);
         numT++;
     }
-    teacherTree = new TBST<teacher>();
     createTreeT(-1, ((-1+numT)/2), numT);
   }
+
   fileS.close();
   fileT.close();
-  stack = new GenStack<stackNode<Person>>();
-  stack->push(stackNode<Person>());
+  stack = new GenStack<stackNode<string>>();
+  sStack = new GenStack<stackNode<student>>();
+  tStack = new GenStack<stackNode<teacher>>();
+  stack->push(stackNode<string>());
   askWhat();
 }
-
+//creates student tree
 void calling::createTreeT(int bottom, int middle, int top){
   teacherTree->insertNode(tArray[middle]);
   int tempLow = (bottom + middle)/2;
@@ -157,7 +167,7 @@ void calling::createTreeT(int bottom, int middle, int top){
     createTreeT(middle, tempHigh, top);
   }
 }
-
+//creates teacher tree
 void calling::createTreeS(int bottom, int middle, int top){
   studentTree->insertNode(sArray[middle]);
   int tempLow = (bottom + middle)/2;
@@ -169,9 +179,7 @@ void calling::createTreeS(int bottom, int middle, int top){
     createTreeS(middle, tempHigh, top);
   }
 }
-
-
-
+//rebuilds student array if it gets too big
 void calling::reconstructS(){
   int oldSize = maxS;
   maxS = maxS*2;
@@ -181,7 +189,7 @@ void calling::reconstructS(){
   }
   sArray = newArray;
 }
-
+//rebuilds teacher array if it gets too big
 void calling::reconstructT(){
   int oldSize = maxT;
   maxT = maxT*2;
@@ -191,7 +199,7 @@ void calling::reconstructT(){
   }
   tArray = newArray;
 }
-
+//The repeating questions are here
 void calling::askWhat(){
   cout << "1. Print all students and their information (sorted by ascending id #)" << endl;
   cout << "2. Print all faculty and their information (sorted by ascending id #)" << endl;
@@ -236,53 +244,63 @@ void calling::askWhat(){
   } else if (c == "13"){
     Q13();
   } else if (c == "14"){
-    Q14();
   } else {
     cout << "Please input a number 1-14." << endl;
     askWhat();
   }
-
 }
-
-void calling::Q1(){ //prints out all students
+//Print all students and their information (sorted by ascending id #)
+void calling::Q1(){
   studentTree->printEntireTree();
   askWhat();
 }
-
-void calling::Q2(){ //prints out all faculty
-  teacherTree->printEntireTree(); 
+//Print all faculty and their information (sorted by ascending id #)
+void calling::Q2(){
+  teacherTree->printEntireTree();
   askWhat();
 }
-
-void calling::Q3(){ //method displays student information when given ID
+//Find and display student information given the students id
+void calling::Q3(){
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
   student s = studentTree->getNode(atoi(c.c_str()));
-  cout << s << endl;
+  if (s.getID() == 0){
+    cout << "No such ID." << endl;
+  } else {
+    cout << s << endl;
+  }
   askWhat();
 }
-
-void calling::Q4(){ //method displays faculty information when given ID
+//Find and display faculty information given the faculty id
+void calling::Q4(){
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
   teacher t = teacherTree->getNode(atoi(c.c_str()));
-  cout << t << endl;
+  if (t.getID() == 0){
+    cout << "No such ID." << endl;
+  } else {
+    cout << t << endl;
+  }
   askWhat();
 }
-
-void calling::Q5(){ //method displays advisor information when given student ID
+//Given a student’s id, print the name and info of their faculty advisor
+void calling::Q5(){
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
   student s = studentTree->getNode(atoi(c.c_str()));
   teacher t = teacherTree->getNode(s.getAdvisor());
-  cout << t << endl;
+  if (t.getID() == 0) {
+    cout << "No such ID" << endl;
+  } else {
+    cout << t << endl;
+  }
   askWhat();
 }
-
-void calling::Q6(){ //method displays advisor information given faculty ID
+//Given a faculty id, print ALL the names and info of his/her advisees.
+void calling::Q6(){
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
@@ -299,8 +317,8 @@ void calling::Q6(){ //method displays advisor information given faculty ID
 
   askWhat();
 }
-
-void calling::Q7(){ //method adds new student by asking for ID, name, year, major, GPA, and advisor, then adds to the Student tree
+//Add a new student
+void calling::Q7(){
   string i, n, y, m, g, t;
   cout << "ID: ";
   cin >> i;
@@ -320,27 +338,56 @@ void calling::Q7(){ //method adds new student by asking for ID, name, year, majo
   cout << "Advisor: ";
   cin >> t;
   cout << endl;
+  bool works = true;
+  try {
+    stod(g);
+  } catch(const invalid_argument i){
+    works = false;
+    cout << "here" << endl;
+  }
+  if (atoi(i.c_str()) == 0 || atoi(t.c_str()) == 0 || works == false){
+    cout << "Bad info given." << endl;
+  } else if (teacherTree->getNode(atoi(t.c_str())).getID() == 0){
+    cout << "There is no faculty with that ID." << endl;
+  } else {
+    student s = student(atoi(i.c_str()), n, y, m, stod(g), atoi(t.c_str()));
+    studentTree->insertNode(s);
+    int ss = atoi(t.c_str());
+    teacher t = teacherTree->getNode(ss);
+    TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+    ts->key.addStudent(atoi(i.c_str()));
 
-  student s = student(atoi(i.c_str()), n, y, m, stod(g), atoi(t.c_str()));
-  studentTree->insertNode(s);
-  stackNode<Person> node = stackNode<Person>("7", s);
-  stack->push(node);
+    stackNode<string> node = stackNode<string>("7", "s");
+    stackNode<student> nodeS = stackNode<student>("7", s);
+    stack->push(node);
+    sStack->push(nodeS);
+  }
   askWhat();
 }
-
-void calling::Q8(){ //method deletes student when given ID
+//Delete a student given the id
+void calling::Q8(){
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
   student s = studentTree->getNode(atoi(c.c_str()));
-  stackNode<Person> node = stackNode<Person>("8", s);
-  stack->push(node);
-  studentTree->deleteNode(s);
-
+  if (s.getID() == 0){
+    cout << "This ID already doesn't exist." << endl;
+  } else {
+    teacher t = teacherTree->getNode(atoi(c.c_str()));
+    if (t.getID() != 0){
+      TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+      ts->key.removeStudent(atoi(c.c_str()));
+    }
+    stackNode<string> node = stackNode<string>("8", "s");
+    stackNode<student> nodeS = stackNode<student>("8", s);
+    stack->push(node);
+    sStack->push(nodeS);
+    studentTree->deleteNode(s);
+  }
   askWhat();
 }
-
-void calling::Q9(){ //method adds new student by asking for ID, name, level, department, all student IDS, then adds to the faculty tree
+//Add a new faculty member
+void calling::Q9(){
   string i, n, l, d, s;
   cout << "ID: ";
   cin >> i;
@@ -356,40 +403,58 @@ void calling::Q9(){ //method adds new student by asking for ID, name, level, dep
   int tot = 0;
   cout << endl;
   cout << "Enter all the student IDs the teacher needs.  Type done when done: " << endl;
-  bool run = true;
-  while (run == true){
-    string tempS;
-    cin >> tempS;
-    if (tempS != "done"){
-      s += ":" + tempS + ",";
-      tot++;
-    } else {
-      run = false;
-    }
 
-  }
-
+  s = "";
+  tot = 0;
 
   teacher t = teacher(atoi(i.c_str()), n, l, d, s, tot);
-  teacherTree->insertNode(t);
-  stackNode<Person> node = stackNode<Person>("9", t);
-  stack->push(node);
-  askWhat();
+  if (t.getID() == 0){
+    cout << "Bad entries for faculty." << endl;
+  } else {
+    teacherTree->insertNode(t);
+    stackNode<string> node = stackNode<string>("9", "t");
+    stackNode<teacher> nodeT = stackNode<teacher>("9", t);
+    stack->push(node);
+    tStack->push(nodeT);
+    askWhat();
+  }
 }
-
-void calling::Q10(){ //method deletes faculty member when given ID
+//Delete a faculty member given the id.
+void calling::Q10(){
   cout << "What is ID?" << endl;
   string c;
   cin >> c;
-  teacher t = teacherTree->getNode(atoi(c.c_str()));
-  stackNode<Person> node = stackNode<Person>("10", t);
-  stack->push(node);
-  teacherTree->deleteNode(t);
+  int ss = atoi(c.c_str());
+  teacher t = teacherTree->getNode(ss);
+  if (t.getID() == 0){
+    cout << "Non-Existant faculty." << endl;
+  } else {
+    int tnumStudents = t.numStudents;
+    string tot = t.array();
+    if (tnumStudents > 0){
+      cout << "You have " << tnumStudents << " students without faculty." << endl;
+    }
+    while(tnumStudents > 0){
+      int IDs = atoi(tot.substr(1, tot.find(",")-1).c_str());
+      student s = studentTree->getNode(IDs);
+      TTreeNode<student> *ts = studentTree->getTreeNode(s);
+      ts->key.advisor = 0;
+      tnumStudents--;
+      if (tot.rfind(":") != 0){
+        tot = tot.substr(tot.find(",")+1);
+      }
+    }
+    stackNode<string> node = stackNode<string>("10", "t");
+    stackNode<teacher> nodeT = stackNode<teacher>("10", t);
+    stack->push(node);
+    tStack->push(nodeT);
+    teacherTree->deleteNode(t);
+  }
 
   askWhat();
 }
-
-void calling::Q11(){ //method changes a student’s advisor given the student id and the new faculty id.
+//Change a student’s advisor given the student id and the new faculty id.
+void calling::Q11(){
   cout << "What is ID?" << endl;
   string c1;
   cin >> c1;
@@ -397,56 +462,139 @@ void calling::Q11(){ //method changes a student’s advisor given the student id
   string c2;
   cin >> c2;
   student s = studentTree->getNode(atoi(c1.c_str()));
-  int ad = s.getAdvisor();
-  TTreeNode<student> *ts = studentTree->getTreeNode(s);
-  ts->key.advisor = atoi(c2.c_str());
+  if (s.getID() == 0){
+    cout << "No such ID." << endl;
+  } else {
+    int ad = s.getAdvisor();
+    TTreeNode<student> *st = studentTree->getTreeNode(s);
+    st->key.advisor = atoi(c2.c_str());
 
-  stackNode<Person> node = stackNode<Person>("11", s, ad);
-  stack->push(node);
+    if (ad != 0){
+      teacher t1 = teacherTree->getNode(ad);
+      TTreeNode<teacher> *ts1 = teacherTree->getTreeNode(t1);
+      ts1->key.removeStudent(s.getID());
+    }
+
+    teacher t = teacherTree->getNode(atoi(c2.c_str()));
+    if (!t.hasStudent(atoi(c1.c_str()))){
+      TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+      ts->key.addStudent(atoi(c1.c_str()));
+    }
+    stackNode<string> node = stackNode<string>("11", "s", ad);
+    stackNode<student> sNode = stackNode<student>("11", s, ad);
+    stack->push(node);
+    sStack->push(sNode);
+  }
+
   askWhat();
 }
-
-void calling::Q12(){ //method removes an advisee from a faculty member given the ids
+//Remove an advisee from a faculty member given the ids
+void calling::Q12(){
   cout << "What is ID?" << endl;
   string c1;
   cin >> c1;
   cout << "What is student ID?" << endl;
   string c2;
   cin >> c2;
-
   teacher t = teacherTree->getNode(atoi(c1.c_str()));
-  TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
-  ts->key.removeStudent(atoi(c2.c_str()));
-  cout << ts->key << endl;
-  //stackNode<Person> node = stackNode<Person>("12", t, atoi(c2.c_str()));
-  //stack->push(node);
+  if (t.getID() == 0){
+    cout << "Bad ID Given." << endl;
+  } else {
+    TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+    if (ts->key.hasStudent(atoi(c2.c_str()))){
+      ts->key.removeStudent(atoi(c2.c_str()));
+      student s = studentTree->getNode(atoi(c2.c_str()));
+      TTreeNode<student> *st = studentTree->getTreeNode(s);
+      st->key.advisor = 0;
+      cout << "The student now has no advisor." << endl;
+
+      stackNode<string> node = stackNode<string>("12", "t", atoi(c2.c_str()));
+      stackNode<teacher> tNode = stackNode<teacher>("12", t, atoi(c2.c_str()));
+      stack->push(node);
+      tStack->push(tNode);
+    } else {
+      cout << "Faculty did not have that student." << endl;
+    }
+  }
 
   askWhat();
 }
-
-void calling::Q13(){ // method performs the rollback
-  stackNode<Person> node = stack->peek();
-  /*if (node.endisHere()){
+//Rollsback whatever the user has been doing
+void calling::Q13(){
+  stackNode<string> node = stack->peek();
+  stackNode<student> sNode = sStack->peek();
+  stackNode<teacher> tNode = tStack->peek();
+  if (node.endisHere()){
     cout << "You have no Rollbacks left." << endl;
   } else if (node.getString() == "7"){
-    student s1 = (student)(node.getType());
+    student s1 = sNode.getType();
+    teacher t = teacherTree->getNode(s1.getAdvisor());
+    TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+    ts->key.removeStudent(s1.getID());
     studentTree->deleteNode(s1);
     stack->pop();
+    sStack->pop();
   } else if (node.getString() == "8"){
-    studentTree->insertNode(node.getType());
+    student s1 = sNode.getType();
+    teacher t = teacherTree->getNode(s1.getAdvisor());
+    TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+    ts->key.addStudent(s1.getID());
+    studentTree->insertNode(s1);
     stack->pop();
+    sStack->pop();
   } else if (node.getString() == "9"){
-    teacherTree->deleteNode(node.getType());
+    teacher t1 = tNode.getType();
+
+    teacherTree->deleteNode(t1);
     stack->pop();
+    tStack->pop();
   } else if (node.getString() == "10"){
-    teacherTree->insertNode(node.getType());
+    teacher t1 = tNode.getType();
+    int tnumStudents = t1.numStudents;
+    string tot = t1.array();
+    if (tnumStudents > 0){
+      cout << "You have " << tnumStudents << " students without faculty." << endl;
+    }
+    while(tnumStudents > 0){
+      int IDs = atoi(tot.substr(1, tot.find(",")-1).c_str());
+      student s = studentTree->getNode(IDs);
+      TTreeNode<student> *ts = studentTree->getTreeNode(s);
+      ts->key.advisor = t1.getID();
+      tnumStudents--;
+      if (tot.rfind(":") != 0){
+        tot = tot.substr(tot.find(",")+1);
+      }
+    }
+    teacherTree->insertNode(t1);
     stack->pop();
-  } //else if (node.getString() == "11"){*/
-
-  //}
+    tStack->pop();
+  } else if (node.getString() == "11"){
+    student s1 = sNode.getType();
+    TTreeNode<student> *st = studentTree->getTreeNode(s1);
+    int ss = st->key.advisor;
+    st->key.advisor = sNode.getOld();
+    cout << "here" << ss << endl;
+    teacher t = teacherTree->getNode(ss);
+    if (t.getID() != 0){
+      TTreeNode<teacher> *ts = teacherTree->getTreeNode(t);
+      ts->key.removeStudent(s1.getID());
+    }
+    teacher t1 = teacherTree->getNode(sNode.getOld());
+    if (t.getID() != 0){
+      TTreeNode<teacher> *ts1 = teacherTree->getTreeNode(t1);
+      ts1->key.addStudent(s1.getID());
+    }
+    stack->pop();
+    sStack->pop();
+  } else if (node.getString() == "12"){
+    teacher t1 = tNode.getType();
+    TTreeNode<teacher> *ts = teacherTree->getTreeNode(t1);
+    ts->key.addStudent(tNode.getOld());
+    student s = studentTree->getNode(tNode.getOld());
+    TTreeNode<student> *st = studentTree->getTreeNode(s);
+    st->key.advisor = t1.getID();
+    stack->pop();
+    tStack->pop();
+  }
   askWhat();
-}
-
-void calling::Q14(){ //exit
-
 }

@@ -3,26 +3,23 @@
 
 class teacher : public Person {
   public:
-    teacher();
-    teacher(int i);
-    teacher(int i, string n, string l, string d, string s, int numS);
-    ~teacher();
-    string look();
-    int getID();
-    string array();
-    bool hasStudent(int i);
-    void addStudent(int student);
-    void removeStudent(int student);
-    string createString();
-    bool operator>(teacher s);
-    bool operator<(teacher s);
-    bool operator!=(teacher s);
+    teacher();//default constructor
+    teacher(int i);//constructor with only id
+    teacher(int i, string n, string l, string d, string s, int numS);//constructor with everything
+    ~teacher();//destructor
+    string look();//gives string for binary
+    int getID();//gives the id
+    string array();//gives list of students (in string form)
+    bool hasStudent(int i);//checks if has a certain student
+    void addStudent(int student);//adds a student
+    void removeStudent(int student);//removes a student
+    string createString();//sets stud for printing
+    bool operator>(teacher s);//can check if teacher >
+    bool operator<(teacher s);//can check if teacher <
+    bool operator!=(teacher s);//can check if teacher !=
 
-    int arraySize;
+    //self explanitory (studs is string students printing)
     int numStudents;
-
-    int test;
-
     int id;
     string name;
     string level;
@@ -31,4 +28,4 @@ class teacher : public Person {
     string studs;
 };
 
-ostream& operator<<(ostream& output, const teacher& T);
+ostream& operator<<(ostream& output, const teacher& T);//prints teacher

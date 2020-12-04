@@ -3,32 +3,32 @@
 using namespace std;
 
 template <class type>
-class stackNode{
+class stackNode{//node for reversing old stuff
   public:
-    stackNode();
-    stackNode(string s, type t);
-    stackNode(string s, type t, int o);
+    stackNode();//default constructor
+    stackNode(string s, type t);//constructor with question and type object
+    stackNode(string s, type t, int o);//constructor with both and old id
     ~stackNode();
 
-    string getString();
-    type getType();
-    int getOld();
-    bool endisHere();
+    string getString();//returns question number
+    type getType();//returns type object
+    int getOld();//returns old ID
+    bool endisHere();//check to make sure not to far in stack
 
   private:
-    string playback;
+    string playback;//question number
     type object;
-    int old;
-    bool end;
+    int old;//old id
+    bool end;//makes sure doesn't hit end of stack
 };
 
 template <class type>
-stackNode<type>::stackNode(){
+stackNode<type>::stackNode(){//default constructor
   end = true;
 }
 
 template <class type>
-stackNode<type>::stackNode(string s, type t){
+stackNode<type>::stackNode(string s, type t){//constructor with question and type object
   playback = s;
   object = t;
   old = -1;
@@ -36,7 +36,7 @@ stackNode<type>::stackNode(string s, type t){
 }
 
 template <class type>
-stackNode<type>::stackNode(string s, type t, int o){
+stackNode<type>::stackNode(string s, type t, int o){//constructor with both and old id
   playback = s;
   object = t;
   old = o;
@@ -44,24 +44,24 @@ stackNode<type>::stackNode(string s, type t, int o){
 }
 
 template <class type>
-stackNode<type>::~stackNode(){}
+stackNode<type>::~stackNode(){}//deconstructor
 
 template <class type>
-string stackNode<type>::getString(){
+string stackNode<type>::getString(){//returns question number
   return playback;
 }
 
 template <class type>
-type stackNode<type>::getType(){
+type stackNode<type>::getType(){//returns type object
   return object;
 }
 
 template <class type>
-int stackNode<type>::getOld(){
+int stackNode<type>::getOld(){//returns old ID
   return old;
 }
 
 template <class type>
-bool stackNode<type>::endisHere(){
+bool stackNode<type>::endisHere(){//makes sure doesn't hit end of stack
   return end;
 }

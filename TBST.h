@@ -4,42 +4,41 @@ template <class type>
 class TBST{
   private:
     TTreeNode<type> *root;
-    int size;
+    int size = 0;
   public:
-    TBST(); //default constructor
-    ~TBST();
+    TBST();//default constructor
+    ~TBST();//destructor
 
-    type getNode(type i); // find the element value in the BST
-    TTreeNode<type>* getTreeNode(type i);
-    bool searchNode(type value); //our key is the value in this example
-    void insertNode(type value); //value is the key
-    bool deleteNode(type value); //delete the node at position value
-    bool isEmpty(); 
-    unsigned int getSize();
-    type getMin(); 
-    type getMax();
-    void recPrint(TTreeNode<type> *node);
-    void printEntireTree();
+    type getNode(type i);//from the ID gives the type
+    TTreeNode<type>* getTreeNode(type i);//From the type gives the node (for editing)
+    bool searchNode(type value); //sees if value exists
+    void insertNode(type value);//inserts a new node
+    bool deleteNode(type value);//deletes a node
+    bool isEmpty();//checks if empty
+    unsigned int getSize();//checks size
+    type getMin();//gives the minimum value
+    type getMax();//gives the maximum value
+    void recPrint(TTreeNode<type> *node);//prints node with all youth too
+    void printEntireTree();//prints whole tree
 
-    TTreeNode<type>* getSuccessor(TTreeNode<type> *d);
+    TTreeNode<type>* getSuccessor(TTreeNode<type> *d);//help for delete node
 };
 
 template <class type>
-//default constructor
-TBST<type>::TBST(){
-  root = NULL;
+TBST<type>::TBST(){//default constructor
+  root = '\0';
   size = 0;
 }
 
 template <class type>
-TBST<type>::~TBST(){
+TBST<type>::~TBST(){//destructor
   delete root;
-  //iterate and delete
 }
 
+
 template <class type>
-void TBST<type>::recPrint(TTreeNode<type> *node){
-  if(node != NULL){
+void TBST<type>::recPrint(TTreeNode<type> *node){//prints node with all youth too
+  if(node != '\0'){
     recPrint(node->left);
     cout << node->key << endl;
     recPrint(node->right);
@@ -47,12 +46,14 @@ void TBST<type>::recPrint(TTreeNode<type> *node){
 }
 
 template <class type>
-void TBST<type>::printEntireTree(){
-  recPrint(root);
+void TBST<type>::printEntireTree(){//prints whole tree
+  if (!isEmpty()){
+    recPrint(root);
+  }
 }
 
 template <class type>
-type TBST<type>::getNode(type i){
+type TBST<type>::getNode(type i){//from the ID gives the type
   if(isEmpty()){
     return '\0';
   } else {
@@ -63,7 +64,7 @@ type TBST<type>::getNode(type i){
       } else {
         curr = curr->right;
       }
-      if (curr == NULL){
+      if (curr == '\0'){
         return '\0';
       }
     }
@@ -72,9 +73,9 @@ type TBST<type>::getNode(type i){
 }
 
 template <class type>
-TTreeNode<type>* TBST<type>::getTreeNode(type i){
+TTreeNode<type>* TBST<type>::getTreeNode(type i){//From the type gives the node (for editing)
   if(isEmpty()){
-    return NULL;
+    return '\0';
   } else {
     TTreeNode<type> *curr = root;
     while (curr->key != i){
@@ -83,8 +84,8 @@ TTreeNode<type>* TBST<type>::getTreeNode(type i){
       } else {
         curr = curr->right;
       }
-      if (curr == NULL){
-        return NULL;
+      if (curr == '\0'){
+        return '\0';
       }
     }
     return curr;
@@ -92,53 +93,50 @@ TTreeNode<type>* TBST<type>::getTreeNode(type i){
 }
 
 template <class type>
-type TBST<type>::getMax(){
+type TBST<type>::getMax(){//gives the maximum value
   TTreeNode<type> *curr = root;
 
   if(isEmpty()){
-    return NULL;
+    return '\0';
   }
-  while(curr->right != NULL){
+  while(curr->right != '\0'){
     curr = curr->right;
   }
   return curr->key;
 }
 
 template <class type>
-type TBST<type>::getMin(){
+type TBST<type>::getMin(){//gives the minimum value
   TTreeNode<type> *curr = root;
 
   if(isEmpty()){
     return '\0';
   }
-  while(curr->left != NULL){
+  while(curr->left != '\0'){
     curr = curr->left;
   }
   return curr->key;
 }
 
 template <class type>
-void TBST<type>::insertNode(type value){
-  TTreeNode<type> *node = new TTreeNode<type>(value); //key is now set to value
-  //check if value exist, if not continue
-  if(isEmpty()){ //empty tree
+void TBST<type>::insertNode(type value){//inserts a new node
+  TTreeNode<type> *node = new TTreeNode<type>(value);
+  if(isEmpty()){
     root = node;
-  } else{ //not an empty tree, now we need to find insertion point
-    TTreeNode<type> *parent = NULL; //empty node
+  } else{
+    TTreeNode<type> *parent = '\0';
     TTreeNode<type> *curr = root;
     while(true){
       parent = curr;
-      //error checking
       if (value < curr->key){
-        curr = curr->left; //going left
-        if (curr == NULL){ //new home found for new node
+        curr = curr->left;
+        if (curr == '\0'){
           parent->left = node;
           break;
         }
-        //else keep looping
       } else {
         curr = curr->right;
-        if (curr == NULL){
+        if (curr == '\0'){
           parent->right = node;
           break;
         }
@@ -149,19 +147,19 @@ void TBST<type>::insertNode(type value){
 }
 
 template <class type>
-bool TBST<type>::searchNode(type value){
+bool TBST<type>::searchNode(type value){//sees if value exists
 
   if(isEmpty()){
     return false;
-  } else { //not an empty tree
+  } else {
     TTreeNode<type> *curr = root;
     while (curr->key != value){
-      if (value < curr->key){ //go left
+      if (value < curr->key){
         curr = curr->left;
       } else {
         curr = curr->right;
       }
-      if (curr == NULL){
+      if (curr == '\0'){
         return false;
       }
     }
@@ -170,59 +168,57 @@ bool TBST<type>::searchNode(type value){
 }
 
 template <class type>
-bool TBST<type>::deleteNode(type value){
+bool TBST<type>::deleteNode(type value){//deletes a node
   if(isEmpty()){
     return false;
   }
-  TTreeNode<type> *part = NULL;
+  TTreeNode<type> *part = '\0';
   TTreeNode<type> *curr = root;
   bool isLeft = true;
-  //finding the node we want to delete
   while (curr->key != value){
     part = curr;
-    if (value < curr->key){ //left child
+    if (value < curr->key){
       curr = curr->left;
       isLeft = true;
-    } else { //right child
+    } else {
       curr = curr->right;
       isLeft = false;
     }
-    if (curr == NULL){
+    if (curr == '\0'){
       return false;
     }
   }
-  //node point has been found
 
   size--;
   //leaf node deleted
-  if (curr->left == NULL && curr->right == NULL){
-    if (curr == root){ //tree has the root as it's only element
-      root = NULL;
-    } else if (isLeft) { //the child is a left child
-      part->left = NULL;
-    } else { //the child is a right child
-      part->right = NULL;
+  if (curr->left == '\0' && curr->right == '\0'){
+    if (curr == root){
+      root = '\0';
+    } else if (isLeft) {
+      part->left = '\0';
+    } else {
+      part->right = '\0';
     }
   }
   //case: deleted node has 1 child
-  else if (curr->right == NULL){ //is left child and the node we need to delete has no right child
+  else if (curr->right == '\0'){ //is left child
     if (curr == root){
       root = curr->left;
-    } else if (isLeft) { //the deleting node is a left child
+    } else if (isLeft) {
       part->left = curr->left;
-    } else { //the deleting node is a right child of the partner
+    } else {
       part->right = curr->left;
     }
-  } else if (curr->left == NULL){ //is right child and the node we need to delete has no left child
+  } else if (curr->left == '\0'){ //is right child
     if (curr == root){
       root = curr->right;
-    } else if (isLeft) { //node we need to delete is a left child of a parent node
+    } else if (isLeft) {
       part->left = curr->right;
-    } else { //node we need to deelte is a right child of a parent node
+    } else {
       part->right = curr->right;
     }
   } else { //the dreaded double children
-    TTreeNode<type> *successor = getSuccessor(curr); //finding the successor of the deleting node which is current
+    TTreeNode<type> *successor = getSuccessor(curr);
 
     if (curr == root){
       root = successor;
@@ -234,19 +230,19 @@ bool TBST<type>::deleteNode(type value){
 
     successor->left = curr->left;
   }
-  curr->left = NULL;
-  curr->right = NULL;
+  curr->left = '\0';
+  curr->right = '\0';
   delete curr; //QUESTION do WE garbage collect in the delete function????
   return true;
 }
 
 template <class type>
-TTreeNode<type>* TBST<type>::getSuccessor(TTreeNode<type> *d){ //d represents the deleted node
+TTreeNode<type>* TBST<type>::getSuccessor(TTreeNode<type> *d){ //represents the deleted node
   TTreeNode<type> *curr = d->right;
   TTreeNode<type> *succ = d;
-  TTreeNode<type> *sp = d; //successors parent
+  TTreeNode<type> *sp = d;
 
-  while (curr != NULL){
+  while (curr != '\0'){
     sp = succ;
     succ = curr;
     curr = curr->left;
@@ -261,8 +257,8 @@ TTreeNode<type>* TBST<type>::getSuccessor(TTreeNode<type> *d){ //d represents th
 }
 
 template <class type>
-bool TBST<type>::isEmpty(){
-  if (getSize() == 0){
+bool TBST<type>::isEmpty(){//checks if empty
+  if (size == 0){
     return true;
   } else {
     return false;
@@ -270,6 +266,6 @@ bool TBST<type>::isEmpty(){
 }
 
 template <class type>
-unsigned int TBST<type>::getSize(){
+unsigned int TBST<type>::getSize(){//checks size
   return size;
 }

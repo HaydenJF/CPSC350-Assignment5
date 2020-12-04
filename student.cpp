@@ -1,6 +1,6 @@
 #include "student.h"
 
-student::student(){
+student::student(){//checks size
   id = 0;
   name = "";
   level = "";
@@ -9,7 +9,7 @@ student::student(){
   advisor = 0;
 }
 
-student::student(int i){
+student::student(int i){//constructor with just ID
   id = i;
   name = "";
   level = "";
@@ -18,7 +18,7 @@ student::student(int i){
   advisor = 0;
 }
 
-student::student(int i, string n, string l, string m, double g, int a){
+student::student(int i, string n, string l, string m, double g, int a){//constructor with all values
   id = i;
   name = n;
   level = l;
@@ -27,9 +27,9 @@ student::student(int i, string n, string l, string m, double g, int a){
   advisor = a;
 }
 
-student::~student(){} //no need for a destructor, since there is no dynamically allocated memory
+student::~student(){}//destructor
 
-string student::look(){
+string student::look(){//gives string for binary conversion
   string s = "";
   s += "(" + to_string(id) + ")";
   s += "[" + name + "]";
@@ -40,19 +40,19 @@ string student::look(){
   return s;
 }
 
-int student::getID(){
+int student::getID(){//gives id
   return id;
 }
 
-int student::getAdvisor(){
+int student::getAdvisor(){//gives advisor id
   return advisor;
 }
 
-void student::changeAdvisor(int i){
+void student::changeAdvisor(int i){//changes advisor
   advisor = i;
 }
 
-bool student::operator>(student s){
+bool student::operator>(student s){//makes it so can check > with student
   if (id > s.getID()){
     return true;
   } else {
@@ -60,7 +60,7 @@ bool student::operator>(student s){
   }
 }
 
-bool student::operator<(student s){
+bool student::operator<(student s){//makes it so can check < with student
   if (id < s.getID()){
     return true;
   } else {
@@ -68,7 +68,7 @@ bool student::operator<(student s){
   }
 }
 
-ostream& operator<<(ostream& o, const student& s){ //output stream to write the infromation out 
+ostream& operator<<(ostream& o, const student& s){//makes it so can print with student
   o << "ID: " << s.id << endl
     << "Name: " << s.name << endl
     << "Year: " << s.level << endl
@@ -79,7 +79,7 @@ ostream& operator<<(ostream& o, const student& s){ //output stream to write the 
   return o;
 }
 
-bool student::operator!=(student s){
+bool student::operator!=(student s){//makes it so can check != with student
   if (id == s.getID()){
     return false;
   } else {

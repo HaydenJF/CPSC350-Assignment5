@@ -1,12 +1,12 @@
 #include "teacher.h"
 
-teacher::teacher(){}
+teacher::teacher(){}//default constructor
 
-teacher::teacher(int i){
+teacher::teacher(int i){//constructor with only id
   id = i;
 }
 
-teacher::teacher(int i, string n, string l, string d, string s, int numS){
+teacher::teacher(int i, string n, string l, string d, string s, int numS){//full constructor
   id = i;
   name = n;
   level = l;
@@ -17,10 +17,10 @@ teacher::teacher(int i, string n, string l, string d, string s, int numS){
 
 }
 
-teacher::~teacher(){
+teacher::~teacher(){//destructor
 }
 
-string teacher::look(){
+string teacher::look(){//gives string for binary transformation
   string t = "";
   t += "(" + to_string(id) + ")";
   t += "[" + name + "]";
@@ -30,22 +30,22 @@ string teacher::look(){
   return t;
 }
 
-int teacher::getID(){
+int teacher::getID(){//gives the id
   return id;
 }
 
-string teacher::array(){
+string teacher::array(){//gives list of students
   return students;
 }
 
-bool teacher::hasStudent(int n){
+bool teacher::hasStudent(int n){ //checks if has a student
   if (students.find(to_string(n)) != string::npos){
     return true;
   }
   return false;
 }
 
-void teacher::addStudent(int student){
+void teacher::addStudent(int student){//adds student
   if (!hasStudent(student)){
     students += ":" + to_string(student) + ",";
     numStudents++;
@@ -53,7 +53,7 @@ void teacher::addStudent(int student){
   }
 }
 
-void teacher::removeStudent(int student){
+void teacher::removeStudent(int student){//removes student
   if (hasStudent(student)){
     if (students.find(to_string(student)) == 1){
       string s2 = students.substr(students.find(to_string(student))+to_string(student).length()+1);
@@ -73,7 +73,7 @@ void teacher::removeStudent(int student){
 }
 
 
-bool teacher::operator>(teacher t){
+bool teacher::operator>(teacher t){//can check if teacher >
   if (id > t.getID()){
     return true;
   } else {
@@ -81,7 +81,7 @@ bool teacher::operator>(teacher t){
   }
 }
 
-bool teacher::operator<(teacher t){
+bool teacher::operator<(teacher t){//can check if teacher <
   if (id < t.getID()){
     return true;
   } else {
@@ -89,7 +89,7 @@ bool teacher::operator<(teacher t){
   }
 }
 
-string teacher::createString(){
+string teacher::createString(){//sets stud up for printing
   string s = "";
   string tempS = students;
   while (tempS.find(":") != string::npos){
@@ -101,7 +101,7 @@ string teacher::createString(){
   return s;
 }
 
-ostream& operator<<(ostream& o, const teacher& t){
+ostream& operator<<(ostream& o, const teacher& t){//prints teacher
   o << "ID: " << t.id << endl
     << "Name: " << t.name << endl
     << "Year: " << t.level << endl
@@ -112,7 +112,7 @@ ostream& operator<<(ostream& o, const teacher& t){
   return o;
 }
 
-bool teacher::operator!=(teacher t){
+bool teacher::operator!=(teacher t){//can check if teacher !=
   if (id == t.getID()){
     return false;
   } else {

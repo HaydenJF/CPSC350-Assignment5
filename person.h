@@ -5,9 +5,10 @@
 
 using namespace std;
 
+//Makes student and faculty related
 class Person {
   public:
-    Person();
+    Person();//constructor
 };
 
 #endif
