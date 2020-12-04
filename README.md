@@ -9,7 +9,7 @@ c. fargo@chapman.edu & saravanan@chapman.edu
 d. CPSC350-01 
 e. Assignment 5 Building a Database with Binary Search Trees
 
-2.) GenStack.h / README.md / TBST.h / TTreeNode.h / calling.cpp / calling.h / facultyTable / main.cpp / person.cpp / person.h / stackNode.h / student.cpp / student.h / studentTable / teacher.cpp / teacher.h / makefile.txt
+2.) GenStack.h / README.md / TBST.h / TTreeNode.h / calling.cpp / calling.h / main.cpp / person.cpp / person.h / stackNode.h / student.cpp / student.h / teacher.cpp / teacher.h / makefile
 
 3.) No runtime errors
 
